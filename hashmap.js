@@ -125,5 +125,11 @@ function HashMap() {
         return _len
     }
 
-    return { set, get, has, remove, length }
+    function clear() {
+        _size = 16
+        buckets = new Array(_size)
+        _len = 0
+    }
+
+    return { set, get, has, remove, length, clear }
 }
