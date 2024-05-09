@@ -131,5 +131,22 @@ function HashMap() {
         _len = 0
     }
 
-    return { set, get, has, remove, length, clear }
+    function keys() {
+        const keys = []
+        for (let i = 0; i < _size; i++) {
+            if (!buckets[i]) continue
+
+            if (Array.isArray(buckets[i])) {
+                const list = buckets[i]
+                for (let j = 0; j < list.length; j++) keys.push(list[j].key)
+                continue
+            }
+
+            keys.push(buckets[i].key)
+        }
+
+        return keys
+    }
+
+    return { set, get, has, remove, length, clear, keys }
 }
