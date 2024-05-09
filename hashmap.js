@@ -49,5 +49,26 @@ function HashMap() {
         buckets[index] = list
     }
 
-    return { set }
+    function get(key) {
+        const index = hash(key)
+        if (index < 0 || index >= buckets.length) {
+            throw new Error('Trying to access index out of bound')
+        }
+
+        if (!buckets[index]) return null
+
+        if (Array.isArray(buckets[index])) {
+            const list = buckets[index]
+            for (let i = 0; i < list.length; i++)
+                if (list[i].key === key) return list[i].value
+
+            return null
+        }
+
+        if (buckets[index].key === key) return buckets[index].value
+
+        return null
+    }
+
+    return { set, get }
 }
