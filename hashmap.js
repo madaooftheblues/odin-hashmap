@@ -14,11 +14,17 @@ function HashMap() {
         return hashCode
     }
 
-    function set(key, value) {
+    function genHash(key) {
         const index = hash(key)
         if (index < 0 || index >= buckets.length) {
             throw new Error('Trying to access index out of bound')
         }
+
+        return index
+    }
+
+    function set(key, value) {
+        const index = genHash(key)
 
         if (!buckets[index]) {
             buckets[index] = { key, value }
@@ -50,10 +56,7 @@ function HashMap() {
     }
 
     function get(key) {
-        const index = hash(key)
-        if (index < 0 || index >= buckets.length) {
-            throw new Error('Trying to access index out of bound')
-        }
+        const index = genHash(key)
 
         if (!buckets[index]) return null
 
@@ -70,5 +73,23 @@ function HashMap() {
         return null
     }
 
-    return { set, get }
+    function has(key) {
+        const index = genHash(key)
+
+        if (!buckets[index]) return false
+
+        if (Array.isArray(buckets[index])) {
+            const list = buckets[index]
+            for (let i = 0; i < list.length; i++)
+                if (list[i].key === key) return true
+
+            return false
+        }
+
+        if (buckets[index].key === key) return true
+
+        return false
+    }
+
+    return { set, get, has }
 }
