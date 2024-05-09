@@ -148,5 +148,13 @@ function HashMap() {
         return keys
     }
 
-    return { set, get, has, remove, length, clear, keys }
+    function values() {
+        const values = []
+        const keys = this.keys()
+        for (key of keys) values.push(this.get(key))
+
+        return values
+    }
+
+    return { set, get, has, remove, length, clear, keys, values }
 }
