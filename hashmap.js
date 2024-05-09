@@ -91,5 +91,29 @@ function HashMap() {
         return false
     }
 
-    return { set, get, has }
+    function remove(key) {
+        const index = genHash(key)
+
+        if (!buckets[index]) return false
+
+        if (Array.isArray(buckets[index])) {
+            const list = buckets[index]
+            for (let i = 0; i < list.length; i++)
+                if (list[i].key === key) {
+                    list.splice(i, 1)
+                    return true
+                }
+
+            return false
+        }
+
+        if (buckets[index].key === key) {
+            buckets[index] = undefined
+            return true
+        }
+
+        return false
+    }
+
+    return { set, get, has, remove }
 }
