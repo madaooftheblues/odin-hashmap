@@ -1,6 +1,7 @@
 function HashMap() {
     let _size = 16
     let buckets = new Array(_size)
+    let _len = 0
 
     function hash(key) {
         let hashCode = 0
@@ -28,11 +29,7 @@ function HashMap() {
 
         if (!buckets[index]) {
             buckets[index] = { key, value }
-            return
-        }
-
-        if (buckets[index].key === key) {
-            buckets[index].value = value
+            _len++
             return
         }
 
@@ -46,6 +43,12 @@ function HashMap() {
             }
 
             list.push({ key, value })
+            _len++
+            return
+        }
+
+        if (buckets[index].key === key) {
+            buckets[index].value = value
             return
         }
 
@@ -53,6 +56,7 @@ function HashMap() {
         list.push(buckets[index])
         list.push({ key, value })
         buckets[index] = list
+        _len++
     }
 
     function get(key) {
@@ -101,6 +105,7 @@ function HashMap() {
             for (let i = 0; i < list.length; i++)
                 if (list[i].key === key) {
                     list.splice(i, 1)
+                    _len--
                     return true
                 }
 
@@ -109,11 +114,16 @@ function HashMap() {
 
         if (buckets[index].key === key) {
             buckets[index] = undefined
+            _len--
             return true
         }
 
         return false
     }
 
-    return { set, get, has, remove }
+    function length() {
+        return _len
+    }
+
+    return { set, get, has, remove, length }
 }
