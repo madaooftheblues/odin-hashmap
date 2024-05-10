@@ -1,4 +1,6 @@
 function HashMap() {
+    const _loadThresh = 0.75
+
     let _size = 16
     let buckets = new Array(_size)
     let _len = 0
@@ -15,6 +17,32 @@ function HashMap() {
         return hashCode
     }
 
+    function loadFactor() {
+        return _len / _size
+    }
+
+    function reHash(that) {
+        const ents = that.entries()
+
+        _size *= 2
+        _len = 0
+        const newBuckets = new Array(_size)
+        buckets = newBuckets
+
+        for (let entry of ents) {
+            const key = entry[0]
+            const value = entry[1]
+            that.set(key, value)
+        }
+    }
+
+    function reHashOnLoad(that) {
+        const load = loadFactor()
+        if (load < _loadThresh) return
+
+        reHash(that)
+    }
+
     function genHash(key) {
         const index = hash(key)
         if (index < 0 || index >= buckets.length) {
@@ -25,6 +53,8 @@ function HashMap() {
     }
 
     function set(key, value) {
+        reHashOnLoad(this)
+
         const index = genHash(key)
 
         if (!buckets[index]) {
